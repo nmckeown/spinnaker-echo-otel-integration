@@ -1,0 +1,3 @@
+[submodule "k8s/spinnaker/charts/spinnaker-opsmx"]
+	path = k8s/spinnaker/charts/spinnaker-opsmx
+	url = https://github.com/OpsMx/spinnaker-helm.git
