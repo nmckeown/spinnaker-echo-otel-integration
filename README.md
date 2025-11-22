@@ -145,14 +145,14 @@ The `arch_drawings/` directory contains visual representations of:
 
 ### Prometheus
 - **Purpose**: Metrics storage and querying
-- **Configuration**: `k8s/monitoring/prometheus-minikube.yaml`
+- **Configuration**: `k8s/monitoring/prometheus.yaml`
 - **Scrape Targets**:
   - OpenTelemetry Collector metrics (port 9464)
   - Collector self-monitoring (port 8888)
 
 ### Grafana
 - **Purpose**: Visualization and dashboards
-- **Configuration**: `k8s/monitoring/grafana-minikube.yaml`
+- **Configuration**: `k8s/monitoring/grafana.yaml`
 - **Dashboard**: `dashboard/grafana-spinnaker-dashboard.yaml`
 - **Features**:
   - Executive high-level overview
@@ -163,7 +163,7 @@ The `arch_drawings/` directory contains visual representations of:
 
 ### Alertmanager
 - **Purpose**: Alert routing and management
-- **Configuration**: `k8s/monitoring/alertmanager-minikube.yaml`
+- **Configuration**: `k8s/monitoring/alertmanager.yaml`
 
 ## Prerequisites
 
@@ -264,13 +264,13 @@ kubectl apply -f k8s/collection/otel-collector.yaml
 
 ```bash
 # Deploy Prometheus
-kubectl apply -f k8s/monitoring/prometheus-minikube.yaml
+kubectl apply -f k8s/monitoring/prometheus.yaml
 
 # Deploy Grafana
-kubectl apply -f k8s/monitoring/grafana-minikube.yaml
+kubectl apply -f k8s/monitoring/grafana.yaml
 
 # Deploy Alertmanager (optional)
-kubectl apply -f k8s/monitoring/alertmanager-minikube.yaml
+kubectl apply -f k8s/monitoring/alertmanager.yaml
 ```
 
 ### 5. Access and Configure Spinnaker
@@ -449,9 +449,9 @@ spinnaker_last_success_ts_seconds - spinnaker_last_failure_ts_seconds
 │   │   ├── fluentbit-echo-webhook.yaml
 │   │   └── otel-collector.yaml
 │   ├── monitoring/            # Monitoring stack
-│   │   ├── alertmanager-minikube.yaml
-│   │   ├── grafana-minikube.yaml
-│   │   └── prometheus-minikube.yaml
+│   │   ├── alertmanager.yaml
+│   │   ├── grafana.yaml
+│   │   └── prometheus.yaml
 │   └── spinnaker/             # Spinnaker deployment
 │       └── charts/
 │           └── spinnaker-opsmx/  # OpsMx Spinnaker Helm chart
