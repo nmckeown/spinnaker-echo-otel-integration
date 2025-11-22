@@ -25,11 +25,11 @@ data:
 
       - name: gmail-spinnaker
         email_configs:
-          - to: "noelmckeown@gmail.com"
-            from: "noelmckeown@gmail.com"                 # must match the Gmail account
+          - to: "uid"gmail.com"
+            from: "uid"gmail.com"                 # must match the Gmail account
             smarthost: "smtp.gmail.com:587"
-            auth_username: "noelmckeown@gmail.com"  # read from mounted file
-            auth_identity: "noelmckeown@gmail.com"
+            auth_username: "uid"gmail.com"  # read from mounted file
+            auth_identity: "uid"gmail.com"
             auth_password_file: /etc/alertmanager/gmail/app_password
             require_tls: true
             send_resolved: true
