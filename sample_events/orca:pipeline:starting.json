@@ -1,0 +1,86 @@
+[
+  [
+    1756564399.742475340,
+    {}
+  ],
+  {
+    "details": {
+      "source": "orca",
+      "type": "orca:pipeline:starting",
+      "created": "1756564399734",
+      "application": "fluent",
+      "requestHeaders": {}
+    },
+    "content": {
+      "execution": {
+        "type": "PIPELINE",
+        "id": "01K3XPB9F5JGY9MVGFE6Q3XDQK",
+        "application": "fluent",
+        "name": "noop-wait",
+        "buildTime": 1756564399694,
+        "canceled": false,
+        "limitConcurrent": true,
+        "maxConcurrentExecutions": 0,
+        "keepWaitingPipelines": false,
+        "stages": [
+          {
+            "id": "01K3XPB9JEB16CP16J51XVD0VX",
+            "refId": "1",
+            "type": "wait",
+            "name": "Wait 1s",
+            "status": "NOT_STARTED",
+            "context": {
+              "waitTime": 10
+            },
+            "outputs": {},
+            "tasks": [],
+            "requisiteStageRefIds": []
+          }
+        ],
+        "startTime": 1756564399718,
+        "status": "RUNNING",
+        "authentication": {
+          "user": "anonymous",
+          "allowedAccounts": [
+            "dockerhub",
+            "default"
+          ]
+        },
+        "origin": "api",
+        "trigger": {
+          "type": "manual",
+          "user": "[anonymous]",
+          "parameters": {},
+          "artifacts": [],
+          "notifications": [],
+          "other": {
+            "type": "manual",
+            "user": "[anonymous]",
+            "parameters": {},
+            "artifacts": [],
+            "notifications": [],
+            "rebake": false,
+            "dryRun": false,
+            "strategy": false,
+            "resolvedExpectedArtifacts": [],
+            "expectedArtifacts": [],
+            "eventId": "1f0e0dc3-bdda-4949-ad25-1063e5ef66cb",
+            "enabled": false,
+            "executionId": "01K3XPB9F5JGY9MVGFE6Q3XDQK",
+            "preferred": false
+          },
+          "resolvedExpectedArtifacts": [],
+          "rebake": false,
+          "strategy": false,
+          "dryRun": false
+        },
+        "pipelineConfigId": "23832fa5-aff6-44c7-88ea-f05c9b365e77",
+        "notifications": [],
+        "initialConfig": {},
+        "systemNotifications": []
+      },
+      "executionId": "01K3XPB9F5JGY9MVGFE6Q3XDQK"
+    },
+    "eventId": "08b83c78-4f9e-437b-b1c1-75d6fc4d8de9"
+  }
+]

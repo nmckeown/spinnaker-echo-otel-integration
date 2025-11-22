@@ -1,0 +1,259 @@
+{
+  "content": {
+    "canceled": false,
+    "context": {
+      "exception": {
+        "details": {
+          "error": "Failed Expression Evaluation",
+          "errors": [
+            "Failed to evaluate [expression] For input string: \"flagBool\" - EL1001E: Type conversion problem, cannot convert from java.lang.String to java.lang.Integer"
+          ]
+        }
+      },
+      "expressionEvaluationSummary": {
+        "#stage( #root.execution, 'Vars')['context']['variables']['flagBool'] == true": [
+          {
+            "description": "Failed to evaluate [expression] For input string: \"flagBool\" - EL1001E: Type conversion problem, cannot convert from java.lang.String to java.lang.Integer",
+            "exceptionType": "java.lang.NumberFormatException",
+            "level": "ERROR",
+            "timestamp": 1758139165297
+          }
+        ]
+      },
+      "preconditions": [
+        {
+          "context": {
+            "expression": "${ #stage('Vars')['context']['variables']['flagBool'] == true }"
+          },
+          "type": "expression"
+        }
+      ]
+    },
+    "endTime": 1758139165280,
+    "execution": {
+      "application": "fluent",
+      "authentication": {
+        "allowedAccounts": [
+          "dockerhub",
+          "default"
+        ],
+        "user": "anonymous"
+      },
+      "buildTime": 1758139164469,
+      "canceled": false,
+      "id": "01K5CM59KNJNDFV2XV5J3JPEAG",
+      "initialConfig": {},
+      "keepWaitingPipelines": false,
+      "limitConcurrent": true,
+      "maxConcurrentExecutions": 0,
+      "name": "noop-smoke",
+      "notifications": [],
+      "origin": "api",
+      "pipelineConfigId": "2547fbae-8a81-4452-af5e-f7a92f2f4b4c",
+      "stages": [
+        {
+          "context": {
+            "failOnFailedExpressions": true,
+            "variables": [
+              {
+                "key": "flagBool",
+                "value": true
+              },
+              {
+                "key": "timestamp",
+                "value": 1758139164609
+              }
+            ]
+          },
+          "endTime": 1758139164892,
+          "id": "01K5CM59SN970QNWMVT45XGCP3",
+          "name": "Vars",
+          "outputs": {
+            "flagBool": true,
+            "timestamp": 1758139164609
+          },
+          "refId": "1",
+          "requisiteStageRefIds": [],
+          "startTime": 1758139164656,
+          "status": "SUCCEEDED",
+          "tasks": [
+            {
+              "endTime": 1758139164825,
+              "id": "1",
+              "implementingClass": "com.netflix.spinnaker.orca.pipeline.tasks.EvaluateVariablesTask",
+              "loopEnd": false,
+              "loopStart": false,
+              "name": "evaluateVariables",
+              "stageEnd": true,
+              "stageStart": true,
+              "startTime": 1758139164705,
+              "status": "SUCCEEDED",
+              "taskExceptionDetails": {}
+            }
+          ],
+          "type": "evaluateVariables"
+        },
+        {
+          "context": {
+            "context": {
+              "expression": "${ #stage('Vars')['context']['variables']['flagBool'] == true }",
+              "expressionResult": "${ #stage('Vars')['context']['variables']['flagBool'] == true }"
+            },
+            "exception": {
+              "details": {
+                "error": "Failed Expression Evaluation",
+                "errors": [
+                  "Failed to evaluate [expression, expressionResult] For input string: \"flagBool\" - EL1001E: Type conversion problem, cannot convert from java.lang.String to java.lang.Integer"
+                ]
+              }
+            },
+            "expressionEvaluationSummary": {
+              "#stage( #root.execution, 'Vars')['context']['variables']['flagBool'] == true": [
+                {
+                  "description": "Failed to evaluate [expression, expressionResult] For input string: \"flagBool\" - EL1001E: Type conversion problem, cannot convert from java.lang.String to java.lang.Integer",
+                  "exceptionType": "java.lang.NumberFormatException",
+                  "level": "ERROR",
+                  "timestamp": 1758139165165
+                }
+              ]
+            },
+            "preconditionType": "expression",
+            "type": "checkPreconditions"
+          },
+          "endTime": 1758139165221,
+          "id": "01K5CM5A8TEF8CZPN4KWXKXSDM",
+          "name": "Check precondition (expression)",
+          "outputs": {},
+          "parentStageId": "01K5CM59SNFDMCC01EHTTV4EHQ",
+          "refId": "2<1",
+          "requisiteStageRefIds": [],
+          "startTime": 1758139165003,
+          "status": "TERMINAL",
+          "syntheticStageOwner": "STAGE_BEFORE",
+          "tasks": [
+            {
+              "endTime": 1758139165162,
+              "id": "1",
+              "implementingClass": "com.netflix.spinnaker.orca.pipeline.tasks.ExpressionPreconditionTask",
+              "loopEnd": false,
+              "loopStart": false,
+              "name": "checkPrecondition",
+              "stageEnd": true,
+              "stageStart": true,
+              "startTime": 1758139165053,
+              "status": "TERMINAL",
+              "taskExceptionDetails": {}
+            }
+          ],
+          "type": "checkPreconditions"
+        },
+        {
+          "context": {
+            "exception": {
+              "details": {
+                "error": "Failed Expression Evaluation",
+                "errors": [
+                  "Failed to evaluate [expression] For input string: \"flagBool\" - EL1001E: Type conversion problem, cannot convert from java.lang.String to java.lang.Integer"
+                ]
+              }
+            },
+            "expressionEvaluationSummary": {
+              "#stage( #root.execution, 'Vars')['context']['variables']['flagBool'] == true": [
+                {
+                  "description": "Failed to evaluate [expression] For input string: \"flagBool\" - EL1001E: Type conversion problem, cannot convert from java.lang.String to java.lang.Integer",
+                  "exceptionType": "java.lang.NumberFormatException",
+                  "level": "ERROR",
+                  "timestamp": 1758139164953
+                }
+              ]
+            },
+            "preconditions": [
+              {
+                "context": {
+                  "expression": "${ #stage('Vars')['context']['variables']['flagBool'] == true }"
+                },
+                "type": "expression"
+              }
+            ]
+          },
+          "endTime": 1758139165280,
+          "id": "01K5CM59SNFDMCC01EHTTV4EHQ",
+          "name": "Preconditions",
+          "outputs": {},
+          "refId": "2",
+          "requisiteStageRefIds": [
+            "1"
+          ],
+          "startTime": 1758139164951,
+          "status": "TERMINAL",
+          "tasks": [],
+          "type": "checkPreconditions"
+        },
+        {
+          "context": {
+            "waitTime": 10
+          },
+          "id": "01K5CM59SNV7YJ28NE9BD9BQQ4",
+          "name": "Wait 1s",
+          "outputs": {},
+          "refId": "3",
+          "requisiteStageRefIds": [
+            "2"
+          ],
+          "status": "NOT_STARTED",
+          "tasks": [],
+          "type": "wait"
+        }
+      ],
+      "startTime": 1758139164609,
+      "status": "RUNNING",
+      "systemNotifications": [],
+      "trigger": {
+        "artifacts": [],
+        "dryRun": false,
+        "notifications": [],
+        "other": {
+          "artifacts": [],
+          "dryRun": false,
+          "enabled": false,
+          "eventId": "e84bc54d-d14a-4535-b3a3-3e88e93c3a46",
+          "executionId": "01K5CM59KNJNDFV2XV5J3JPEAG",
+          "expectedArtifacts": [],
+          "notifications": [],
+          "parameters": {
+            "FLAG": "true"
+          },
+          "preferred": false,
+          "rebake": false,
+          "resolvedExpectedArtifacts": [],
+          "strategy": false,
+          "type": "manual",
+          "user": "[anonymous]"
+        },
+        "parameters": {
+          "FLAG": "true"
+        },
+        "rebake": false,
+        "resolvedExpectedArtifacts": [],
+        "strategy": false,
+        "type": "manual",
+        "user": "[anonymous]"
+      },
+      "type": "PIPELINE"
+    },
+    "executionId": "01K5CM59KNJNDFV2XV5J3JPEAG",
+    "isSynthetic": false,
+    "name": "Preconditions",
+    "stageId": "01K5CM59SNFDMCC01EHTTV4EHQ",
+    "standalone": false,
+    "startTime": 1758139164951
+  },
+  "details": {
+    "application": "fluent",
+    "created": "1758139165304",
+    "requestHeaders": {},
+    "source": "orca",
+    "type": "orca:stage:failed"
+  },
+  "eventId": "7a97c938-82d2-4e08-99f6-e72ccb989591"
+}

@@ -1,0 +1,467 @@
+# otel-collector.yaml
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: collection
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: otel-collector-config
+  namespace: collection
+data:
+  otel-config.yaml: |
+    receivers:
+      otlp:
+        protocols:
+          grpc:
+            endpoint: 0.0.0.0:4317
+          http:
+            endpoint: 0.0.0.0:4318
+
+    processors:
+      batch: {}
+      resource:
+        attributes:
+          - key: service.namespace
+            action: upsert
+            value: flb
+          - key: telemetry.sdk.language
+            action: upsert
+            value: fluent-bit
+      transform/metrics:
+        error_mode: ignore
+        metric_statements:
+          - context: resource
+            statements:
+              - delete_key(attributes, "") where attributes[""] != nil
+          - context: datapoint
+            statements:
+              - delete_key(attributes, "") where attributes[""] != nil
+      transform/logs:
+        log_statements:
+          - context: log
+            statements:
+              # pipeline executions
+              - set(attributes["execution.id"],             body["content"]["execution"]["id"])                   where IsMap(body["content"]["execution"])
+              - set(attributes["execution.application"],    body["content"]["execution"]["application"])          where IsMap(body["content"]["execution"])
+              - set(attributes["execution.name"],           body["content"]["execution"]["name"])                 where IsMap(body["content"]["execution"])
+              - set(attributes["execution.status"],         body["content"]["execution"]["status"])               where IsMap(body["content"]["execution"])
+              - set(attributes["execution.starttime"],      body["content"]["execution"]["startTime"])            where IsMap(body["content"]["execution"])
+              - set(attributes["execution.endtime"],        body["content"]["execution"]["endTime"])              where IsMap(body["content"]["execution"])
+              - set(attributes["execution.canceled"],       body["content"]["execution"]["canceled"])             where IsMap(body["content"]["execution"])
+              - set(attributes["execution.cancelreason"],   body["content"]["execution"]["cancellationReason"])   where body["content"]["execution"]["cancellationReason"] != nil
+
+              # triggers
+              - set(attributes["execution.user"],         body["content"]["execution"]["trigger"]["user"]) where IsMap(body["content"]["execution"])
+              - set(attributes["execution.triggertype"],  body["content"]["execution"]["trigger"]["type"]) where IsMap(body["content"]["execution"])
+
+              # pipeline stages
+              #- set(attributes["stage.name"],           body["content"]["execution"]["stages"][0]["name"]) where body["content"]["execution"]["stages"][0]["name"] != nil
+              #- set(attributes["stage.type"],           body["content"]["execution"]["stages"][0]["type"]) where body["content"]["execution"]["stages"][0]["type"] != nil
+              #- set(attributes["stage.exceptiontype"],  body["content"]["execution"]["stages"][0]["context"]["exception"]["details"]["error"]) where body["content"]["execution"]["stages"][0]["context"]["exception"]["details"]["error"] != nil
+              #- set(attributes["stage.Id"],             body["content"]["stageId"]) where body["content"]["stageId"] != nil
+
+              # event details
+              - set(attributes["event.type"],           body["details"]["type"]) where IsMap(body["details"])
+              - set(attributes["event.source"],         body["details"]["source"]) where IsMap(body["details"])
+              - set(attributes["event.created_ms"],     body["details"]["created"]) where IsMap(body["details"])
+              - set(attributes["event.created_s"],      Double(attributes["event.created_ms"]) / 1000.0) where attributes["event.created_ms"] != nil
+
+              # extract service attributes from pipeline naming convention
+              - set(attributes["execution.name"], String(attributes["execution.name"])) where attributes["execution.name"] != nil
+              - set(attributes["service.meta"],   Split(attributes["execution.name"], "-")) where attributes["execution.name"] != nil
+
+              # extract elements (cloud/region/env/domain/instance)
+              - set(attributes["cloud.provider"],   attributes["service.meta"][0]) where IsList(attributes["service.meta"]) and Len(attributes["service.meta"]) > 0
+              - set(attributes["cloud.region"],     attributes["service.meta"][1]) where IsList(attributes["service.meta"]) and Len(attributes["service.meta"]) > 1
+              - set(attributes["cloud.env"],        attributes["service.meta"][2]) where IsList(attributes["service.meta"]) and Len(attributes["service.meta"]) > 2
+              - set(attributes["cloud.domain"],     attributes["service.meta"][3]) where IsList(attributes["service.meta"]) and Len(attributes["service.meta"]) > 3
+              - set(attributes["cloud.instance"],   attributes["service.meta"][4]) where IsList(attributes["service.meta"]) and Len(attributes["service.meta"]) > 4
+
+              # delete blank keys
+              - delete_key(attributes, "") where attributes[""] != nil
+
+      # Move stages array into body so unroll can work on it
+      transform/stages_to_body:
+        log_statements:
+          - context: log
+            statements:
+              - set(body, body["content"]["execution"]["stages"]) where body["content"]["execution"]["stages"] != nil
+
+      # Expand body list into multiple log records (one per stage)
+      unroll: {}
+
+      # log.body is a single stage object; map fields to attributes
+      transform/stage_fields:
+        log_statements:
+          - context: log
+            statements:
+              - set(attributes["stage.name"],           body["name"]) where body["name"] != nil
+              - set(attributes["stage.type"],           body["type"]) where body["type"] != nil
+              - set(attributes["stage.exceptiontype"],  body["context"]["exception"]["details"]["error"]) where body["context"]["exception"]["details"]["error"] != nil
+              - set(attributes["stage.Id"],             body["content"]["stageId"]) where body["content"]["stageId"] != nil
+
+      transform/strip-service-label:
+        metric_statements:
+          - context: resource
+            statements:
+              # If your metric has a "service" attr, drop it to avoid collision
+              - delete_key(attributes, "service") where attributes["service"] != nil
+
+      # rewrites a Spinnaker metric by calculating duration, renaming the metric and setting a new unit
+      transform/spinnaker_duration:
+        error_mode: ignore
+        metric_statements:
+          - context: datapoint
+            conditions:
+              - metric.name == "spinnaker.execution_completed_duration"
+            statements:
+              # compute pipeline duration seconds from ms
+              - set(value_double, (Double(attributes["execution.endtime"]) - Double(attributes["execution.starttime"])) / 1000.0)
+                where attributes["execution.endtime"] != nil and attributes["execution.starttime"] != nil
+
+              # publish metric name/unit
+              - set(metric.name, "spinnaker_pipeline_complete_duration_seconds")
+              - set(metric.unit, "s")
+
+          - context: datapoint
+            conditions:
+              - metric.name == "spinnaker.execution_incomplete_duration"
+            statements:
+              # compute pipeline duration seconds from ms
+              - set(value_double, (Double(attributes["execution.endtime"]) - Double(attributes["execution.starttime"])) / 1000.0)
+                where attributes["execution.endtime"] != nil and attributes["execution.starttime"] != nil
+
+              # publish metric name/unit
+              - set(metric.name, "spinnaker_pipeline_incomplete_duration_seconds")
+              - set(metric.unit, "s")
+
+      # normalises Spinnaker event timestamps into prometheus style seconds metrics for MTTR calculations
+      transform/mttr_timestamps:
+        error_mode: ignore
+        metric_statements:
+          - context: datapoint
+            conditions:
+              - metric.name == "spinnaker_last_failure_ts_seconds" or metric.name == "spinnaker_last_success_ts_seconds"
+            statements:
+              - set(value_double, Double(attributes["event.created_s"])) where attributes["event.created_s"] != nil
+              - set(metric.unit, "s")               
+              - delete_key(attributes, "event.created_s")
+
+    exporters:
+      debug:
+        verbosity: detailed
+      prometheus:
+        endpoint: 0.0.0.0:9464
+        resource_to_telemetry_conversion:
+          enabled: false
+
+    connectors:
+      signaltometrics/failure_rate:
+        logs:
+          - name: spinnaker.execution_completed
+            description: "Pipeline completed event (gauge = 1)"
+            conditions:
+              - attributes["event.type"] == "orca:pipeline:complete"
+            gauge:
+              value: "1"
+            attributes:
+              - { key: execution.id,          default_value: unknown }
+              - { key: execution.application, default_value: unknown }
+              - { key: execution.name,        default_value: unknown }
+              - { key: execution.status,      default_value: unknown }
+              - { key: execution.user,        default_value: anonymous }
+              - { key: execution.triggertype, default_value: unknown }
+              - { key: execution.starttime,   default_value: 0 }
+              - { key: execution.endtime,     default_value: 0 }
+              - { key: event.source,          default_value: orca }
+
+          - name: spinnaker.execution_completed_duration
+            description: "Pipeline completed event (gauge = 1)"
+            conditions:
+              - attributes["event.type"] == "orca:pipeline:complete"
+            gauge:
+              value: "1"
+            attributes:
+              - { key: execution.id,          default_value: unknown }
+              - { key: execution.application, default_value: unknown }
+              - { key: execution.name,        default_value: unknown }
+              - { key: execution.status,      default_value: unknown }
+              - { key: execution.user,        default_value: anonymous }
+              - { key: execution.triggertype, default_value: unknown }
+              - { key: execution.starttime,   default_value: 0 }
+              - { key: execution.endtime,     default_value: 0 }
+              - { key: event.source,          default_value: orca }
+
+          - name: spinnaker.execution_incomplete
+            description: "Pipeline failed/canceled/stopped event (gauge = 1)"
+            conditions:
+              - attributes["event.type"] == "orca:pipeline:failed"
+            gauge:
+              value: "1"
+            attributes:
+              - { key: execution.id,            default_value: unknown }
+              - { key: execution.application,   default_value: unknown }
+              - { key: execution.name,          default_value: unknown }
+              - { key: execution.status,        default_value: unknown }
+              - { key: execution.user,          default_value: anonymous }
+              - { key: execution.triggertype,   default_value: unknown }
+              - { key: execution.starttime,     default_value: 0 }
+              - { key: execution.endtime,       default_value: 0 }
+              - { key: execution.cancelreason,  default_value: unknown }
+              - { key: event.source,            default_value: orca }
+
+          - name: spinnaker.execution_incomplete_duration
+            description: "Pipeline failed/canceled/stopped event (gauge = 1)"
+            conditions:
+              - attributes["event.type"] == "orca:pipeline:failed"
+            gauge:
+              value: "1"
+            attributes:
+              - { key: execution.id,            default_value: unknown }
+              - { key: execution.application,   default_value: unknown }
+              - { key: execution.name,          default_value: unknown }
+              - { key: execution.status,        default_value: unknown }
+              - { key: execution.user,          default_value: anonymous }
+              - { key: execution.triggertype,   default_value: unknown }
+              - { key: execution.starttime,     default_value: 0 }
+              - { key: execution.endtime,       default_value: 0 }
+              - { key: execution.cancelreason,  default_value: unknown }
+              - { key: event.source,            default_value: orca }
+
+      signaltometrics/mttr_events:
+        logs:
+          # FAILURE: record event timestamp as a metric sample
+          - name: spinnaker_last_failure_ts_seconds
+            description: "Last pipeline failure event timestamp (seconds since epoch)"
+            conditions:
+              - attributes["event.type"] == "orca:pipeline:failed"
+            gauge:
+              # set a placeholder; overwrite with transform 
+              value: "0"
+            attributes:
+              - { key: execution.application, default_value: unknown }
+              - { key: execution.name,        default_value: unknown }
+              - { key: event.source,          default_value: orca }
+              - { key: event.created_s,       default_value: "0" }
+
+          # SUCCESS: record event timestamp as a metric sample
+          - name: spinnaker_last_success_ts_seconds
+            description: "Last pipeline success event timestamp (seconds since epoch)"
+            conditions:
+              - attributes["event.type"] == "orca:pipeline:complete"
+            gauge:
+              value: "0"
+            attributes:
+              - { key: execution.application, default_value: unknown }
+              - { key: execution.name,        default_value: unknown }
+              - { key: event.source,          default_value: orca }
+              - { key: event.created_s,       default_value: "0" }
+
+      count/pipeline_executions:
+        logs:
+          spinnaker.pipeline_executions_total:
+            description: "Spinnaker pipeline executions total"
+            conditions:
+              - IsMatch(attributes["event.type"], "^orca:pipeline:.*$")
+            attributes:
+              - { key: execution.id,          default_value: unknown }
+              - { key: execution.application, default_value: unknown }
+              - { key: execution.name,        default_value: unknown }
+              - { key: execution.status,      default_value: unknown }
+              - { key: execution.user,        default_value: anonymous }
+              - { key: execution.triggertype, default_value: unknown }
+              - { key: execution.starttime,   default_value: 0 }
+              - { key: execution.endtime,     default_value: 0 }
+              - { key: event.source,          default_value: orca }
+              - { key: cloud.provider,        default_value: unknown }
+              - { key: cloud.region,          default_value: unknown }
+              - { key: cloud.env,             default_value: unknown }
+              - { key: cloud.domain,          default_value: unknown }
+              - { key: cloud.instance,        default_value: unknown }
+
+          spinnaker.execution_starting_total:
+            description: "Spinnaker pipeline executions starting"
+            conditions:
+              - attributes["event.type"] == "orca:pipeline:starting"
+            attributes:
+              - { key: execution.id,          default_value: unknown }
+              - { key: execution.application, default_value: unknown }
+              - { key: execution.name,        default_value: unknown }
+              - { key: execution.status,      default_value: unknown }
+              - { key: execution.user,        default_value: anonymous }
+              - { key: execution.triggertype, default_value: unknown }
+              - { key: execution.starttime,   default_value: 0 }
+              - { key: event.source,          default_value: orca }
+              - { key: cloud.provider,        default_value: unknown }
+              - { key: cloud.region,          default_value: unknown }
+              - { key: cloud.env,             default_value: unknown }
+              - { key: cloud.domain,          default_value: unknown }
+              - { key: cloud.instance,        default_value: unknown }
+
+          spinnaker.execution_completed_total:
+            description: "Spinnaker pipeline executions completed"
+            conditions:
+              - attributes["event.type"] == "orca:pipeline:complete"
+            attributes:
+              - { key: execution.id,          default_value: unknown }
+              - { key: execution.application, default_value: unknown }
+              - { key: execution.name,        default_value: unknown }
+              - { key: execution.status,      default_value: unknown }
+              - { key: execution.user,        default_value: anonymous }
+              - { key: execution.triggertype, default_value: unknown }
+              - { key: execution.starttime,   default_value: 0 }
+              - { key: execution.endtime,     default_value: 0 }
+              - { key: event.source,          default_value: orca }
+              - { key: cloud.provider,        default_value: unknown }
+              - { key: cloud.region,          default_value: unknown }
+              - { key: cloud.env,             default_value: unknown }
+              - { key: cloud.domain,          default_value: unknown }
+              - { key: cloud.instance,        default_value: unknown }
+
+          spinnaker.execution_failed_total:
+            description: "Spinnaker pipeline executions failed"
+            conditions:
+              - attributes["event.type"] == "orca:pipeline:failed"
+            attributes:
+              - { key: execution.application,   default_value: unknown }
+              - { key: execution.name,          default_value: unknown }
+              - { key: execution.status,        default_value: unknown }
+              - { key: execution.user,          default_value: anonymous }
+              - { key: execution.triggertype,   default_value: unknown }
+              - { key: execution.starttime,     default_value: 0 }
+              - { key: execution.endtime,       default_value: 0 }
+              - { key: execution.cancelreason,  default_value: unknown }
+              - { key: event.source,            default_value: orca }
+              - { key: cloud.provider,          default_value: unknown }
+              - { key: cloud.region,            default_value: unknown }
+              - { key: cloud.env,               default_value: unknown }
+              - { key: cloud.domain,            default_value: unknown }
+              - { key: cloud.instance,          default_value: unknown }
+
+      count/pipeline_stages:
+        logs:
+          spinnaker.stage_starting_total:
+            description: "Spinnaker pipeline stages starting"
+            conditions:
+              - attributes["event.type"] == "orca:stage:starting"
+            attributes:
+              - { key: execution.application,   default_value: unknown }
+              - { key: stage.name,              default_value: unknown }
+              - { key: stage.type,              default_value: unknown }
+              - { key: stage.Id,                default_value: unknown } 
+              - { key: event.source,            default_value: orca }
+
+          spinnaker.stage_completed_total:
+            description: "Spinnaker pipeline stages completed"
+            conditions:
+              - attributes["event.type"] == "orca:stage:complete"
+            attributes:
+              - { key: execution.application,   default_value: unknown }
+              - { key: stage.name,              default_value: unknown }
+              - { key: stage.type,              default_value: unknown }
+              - { key: stage.Id,                default_value: unknown } 
+              - { key: event.source,            default_value: orca }
+
+          spinnaker.stage_failed_total:
+            description: "Spinnaker pipeline stages failed"
+            conditions:
+              - attributes["event.type"] == "orca:stage:failed"
+            attributes:
+              - { key: execution.application,   default_value: unknown }
+              - { key: stage.name,              default_value: unknown }
+              - { key: stage.type,              default_value: unknown }
+              - { key: stage.Id,                default_value: unknown }
+              - { key: stage.exceptiontype,     default_value: unknown }
+              - { key: event.source,            default_value: orca }
+
+    service:
+      telemetry:
+        metrics:
+          level: detailed            # optional: none | basic | normal | detailed
+          readers:
+            - pull:
+                exporter:
+                  prometheus:
+                    host: 0.0.0.0  # expose on all interfaces
+                    port: 8888     # /metrics lives here
+
+      pipelines:
+        # Logs pipeline: receive logs, normalize fields, export to debug and to the connector
+        logs:
+          receivers: [otlp]
+          processors: [transform/logs, transform/stages_to_body, unroll, transform/stage_fields]
+          exporters: [debug,
+                      signaltometrics/failure_rate,
+                      signaltometrics/mttr_events,
+                      count/pipeline_executions, 
+                      count/pipeline_stages]
+
+        # Metrics pipeline: receive from the connector and expose via Prometheus exporter
+        metrics:
+          receivers: [signaltometrics/failure_rate,
+                      signaltometrics/mttr_events,
+                      count/pipeline_executions, 
+                      count/pipeline_stages]
+          processors: [transform/metrics,
+                      transform/spinnaker_duration,
+                      transform/strip-service-label,
+                      transform/mttr_timestamps]
+          exporters: [prometheus]
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: otel-collector
+  namespace: collection
+spec:
+  replicas: 1
+  selector:
+    matchLabels: { app: otel-collector }
+  template:
+    metadata:
+      labels: { app: otel-collector }
+    spec:
+      containers:
+        - name: otel-collector
+          image: otel/opentelemetry-collector-contrib:latest
+          args:
+            - --config=/etc/otel/otel-config.yaml
+          ports:
+            - containerPort: 4317   # OTLP gRPC
+            - containerPort: 4318   # OTLP HTTP
+            - containerPort: 9464   # Prometheus exporter (pipeline metrics)
+            - containerPort: 8888   # Self-metrics (telemetry reader)
+          volumeMounts:
+            - name: config
+              mountPath: /etc/otel
+      volumes:
+        - name: config
+          configMap:
+            name: otel-collector-config
+            items:
+              - key: otel-config.yaml
+                path: otel-config.yaml
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: otel-collector
+  namespace: collection
+spec:
+  selector: { app: otel-collector }
+  ports:
+    - name: otlp-grpc
+      port: 4317
+      targetPort: 4317
+    - name: otlp-http
+      port: 4318
+      targetPort: 4318
+    - name: prom-exp           # <-- pipeline metrics for Prometheus
+      port: 9464
+      targetPort: 9464
+    - name: self-metrics       # <-- collector self-metrics
+      port: 8888
+      targetPort: 8888
+  type: ClusterIP

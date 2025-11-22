@@ -1,0 +1,103 @@
+# fluentbit-echo-webhook.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fluent-bit-config
+  namespace: collection
+data:
+  fluent-bit.conf: |
+    [SERVICE]
+        Parsers_File  parsers.conf
+        Log_Level     debug
+
+    [INPUT]
+        Name                    http
+        Listen                  0.0.0.0
+        Port                    8080
+        Tag                     echo.events
+        buffer_max_size         50M
+        buffer_chunk_size       1M
+        successful_response_code 200
+        http2                   Off
+
+    # Parse JSON body into structured records (from the "body" field)
+    [FILTER]
+        Name        parser
+        Match       echo.events
+        Key_Name    body
+        Parser      json
+
+    # Quick visibility
+    #[OUTPUT]
+    #    Name   stdout
+    #    Match  echo.events
+    #    Format json 
+
+    [OUTPUT]
+        Name  opentelemetry
+        Match echo.events
+        Host  otel-collector.collection.svc.cluster.local
+        Port  4317
+        grpc  On
+        http2 On
+
+    # Example Loki output (uncomment & set Host/Port)
+    # [OUTPUT]
+    #     Name    loki
+    #     Match   echo.events
+    #     Host    loki.loki.svc.cluster.local
+    #     Port    3100
+    #     Labels  job=spinnaker,source=echo
+
+  parsers.conf: |
+    [PARSER]
+        Name        json
+        Format      json
+        Time_Key    time
+        Time_Format %Y-%m-%dT%H:%M:%S.%L%z
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fluent-bit-echo
+  namespace: collection
+spec:
+  replicas: 1
+  selector:
+    matchLabels: { app: fluent-bit-echo }
+  template:
+    metadata:
+      labels: { app: fluent-bit-echo }
+    spec:
+      containers:
+        - name: fluent-bit
+          image: cr.fluentbit.io/fluent/fluent-bit:latest
+          args: ["-c", "/fluent-bit/etc/fluent-bit.conf"]
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - name: cfg
+              mountPath: /fluent-bit/etc
+      volumes:
+        - name: cfg
+          configMap:
+            name: fluent-bit-config
+            items:
+              - key: fluent-bit.conf
+                path: fluent-bit.conf
+              - key: parsers.conf
+                path: parsers.conf
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fluentbit-http
+  namespace: collection
+spec:
+  selector: { app: fluent-bit-echo }
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 8080
+  type: ClusterIP

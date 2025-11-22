@@ -1,0 +1,133 @@
+{
+  "content": {
+    "canceled": false,
+    "context": {
+      "waitTime": 5
+    },
+    "execution": {
+      "application": "fluent",
+      "authentication": {
+        "allowedAccounts": [
+          "dockerhub",
+          "default"
+        ],
+        "user": "anonymous"
+      },
+      "buildTime": 1758053349671,
+      "canceled": false,
+      "id": "01K5A2AE8K5Q79Z00VZ5FAKJJ9",
+      "initialConfig": {},
+      "keepWaitingPipelines": false,
+      "limitConcurrent": true,
+      "maxConcurrentExecutions": 0,
+      "name": "noop-wait4",
+      "notifications": [],
+      "origin": "api",
+      "pipelineConfigId": "c168b140-2051-47b3-a90d-2fdd7cbf8cd2",
+      "stages": [
+        {
+          "context": {
+            "waitTime": 10
+          },
+          "endTime": 1758053359871,
+          "id": "01K5A2AE9703RRGEP1Y7VHJW1P",
+          "name": "Wait 1s",
+          "outputs": {},
+          "refId": "1",
+          "requisiteStageRefIds": [],
+          "startTime": 1758053349755,
+          "status": "SUCCEEDED",
+          "tasks": [
+            {
+              "endTime": 1758053359815,
+              "id": "1",
+              "implementingClass": "com.netflix.spinnaker.orca.pipeline.tasks.WaitTask",
+              "loopEnd": false,
+              "loopStart": false,
+              "name": "wait",
+              "stageEnd": true,
+              "stageStart": true,
+              "startTime": 1758053349808,
+              "status": "SUCCEEDED",
+              "taskExceptionDetails": {}
+            }
+          ],
+          "type": "wait"
+        },
+        {
+          "context": {
+            "waitTime": 5
+          },
+          "id": "01K5A2AE979NVRHY9F2F46218E",
+          "name": "Wait 2",
+          "outputs": {},
+          "refId": "2",
+          "requisiteStageRefIds": [
+            "1"
+          ],
+          "startTime": 1758053359925,
+          "status": "RUNNING",
+          "tasks": [
+            {
+              "id": "1",
+              "implementingClass": "com.netflix.spinnaker.orca.pipeline.tasks.WaitTask",
+              "loopEnd": false,
+              "loopStart": false,
+              "name": "wait",
+              "stageEnd": true,
+              "stageStart": true,
+              "status": "NOT_STARTED",
+              "taskExceptionDetails": {}
+            }
+          ],
+          "type": "wait"
+        }
+      ],
+      "startTime": 1758053349701,
+      "status": "RUNNING",
+      "systemNotifications": [],
+      "trigger": {
+        "artifacts": [],
+        "dryRun": false,
+        "notifications": [],
+        "other": {
+          "artifacts": [],
+          "dryRun": false,
+          "enabled": false,
+          "eventId": "3c1c3ff5-32cd-4b11-bbb3-27811f74a18d",
+          "executionId": "01K5A2AE8K5Q79Z00VZ5FAKJJ9",
+          "expectedArtifacts": [],
+          "notifications": [],
+          "parameters": {},
+          "preferred": false,
+          "rebake": false,
+          "resolvedExpectedArtifacts": [],
+          "strategy": false,
+          "type": "manual",
+          "user": "[anonymous]"
+        },
+        "parameters": {},
+        "rebake": false,
+        "resolvedExpectedArtifacts": [],
+        "strategy": false,
+        "type": "manual",
+        "user": "[anonymous]"
+      },
+      "type": "PIPELINE"
+    },
+    "executionId": "01K5A2AE8K5Q79Z00VZ5FAKJJ9",
+    "isSynthetic": false,
+    "name": "Wait 2",
+    "stageId": "01K5A2AE979NVRHY9F2F46218E",
+    "standalone": false,
+    "startTime": 1758053359925
+  },
+  "details": {
+    "application": "fluent",
+    "created": "1758053359933",
+    "requestHeaders": {},
+    "source": "orca",
+    "type": "orca:stage:starting"
+  },
+  "eventId": "b4701cec-4215-4752-846f-429ced492cd4"
+}

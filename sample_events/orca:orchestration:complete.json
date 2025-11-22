@@ -1,0 +1,111 @@
+{
+  "content": {
+    "execution": {
+      "application": "fluent",
+      "authentication": {
+        "allowedAccounts": [
+          "dockerhub",
+          "default"
+        ],
+        "user": "anonymous"
+      },
+      "buildTime": 1758053179473,
+      "canceled": false,
+      "description": "Save pipeline 'noop-wait4'",
+      "endTime": 1758053180116,
+      "id": "01K5A2582HS9M5N3XQ4AEGEXDR",
+      "initialConfig": {},
+      "keepWaitingPipelines": false,
+      "limitConcurrent": false,
+      "maxConcurrentExecutions": 0,
+      "notifications": [],
+      "origin": "deck",
+      "stages": [
+        {
+          "context": {
+            "application": "fluent",
+            "notification.type": "savepipeline",
+            "pipeline": "eyJhcHBDb25maWciOnt9LCJhcHBsaWNhdGlvbiI6ImZsdWVudCIsImlkIjoiYzE2OGIxNDAtMjA1MS00N2IzLWE5MGQtMmZkZDdjYmY4Y2QyIiwiaW5kZXgiOjUsImtlZXBXYWl0aW5nUGlwZWxpbmVzIjpmYWxzZSwibGFzdE1vZGlmaWVkQnkiOiJhbm9ueW1vdXMiLCJsaW1pdENvbmN1cnJlbnQiOnRydWUsIm5hbWUiOiJub29wLXdhaXQ0IiwicGFyYW1ldGVyQ29uZmlnIjpbXSwic2NoZW1hIjoiMSIsInN0YWdlcyI6W3sibmFtZSI6IldhaXQgMXMiLCJyZWZJZCI6IjEiLCJyZXF1aXNpdGVTdGFnZVJlZklkcyI6W10sInR5cGUiOiJ3YWl0Iiwid2FpdFRpbWUiOjEwfSx7Im5hbWUiOiJXYWl0IiwicmVmSWQiOiIyIiwicmVxdWlzaXRlU3RhZ2VSZWZJZHMiOlsiMSJdLCJ0eXBlIjoid2FpdCIsIndhaXRUaW1lIjo1fV0sInRyaWdnZXJzIjpbXSwidXBkYXRlVHMiOiIxNzU3ODY5NTY1MDAwIn0=",
+            "pipeline.id": "c168b140-2051-47b3-a90d-2fdd7cbf8cd2",
+            "pipeline.name": "noop-wait4",
+            "staleCheck": true,
+            "user": "anonymous"
+          },
+          "endTime": 1758053180063,
+          "id": "01K5A2582HVXQZCNBB0VF42CQQ",
+          "name": "savePipeline",
+          "outputs": {},
+          "refId": "0",
+          "requisiteStageRefIds": [],
+          "startTime": 1758053179575,
+          "status": "SUCCEEDED",
+          "tasks": [
+            {
+              "endTime": 1758053179844,
+              "id": "1",
+              "implementingClass": "com.netflix.spinnaker.orca.front50.tasks.SavePipelineTask",
+              "loopEnd": false,
+              "loopStart": false,
+              "name": "savePipeline",
+              "stageEnd": false,
+              "stageStart": true,
+              "startTime": 1758053179631,
+              "status": "SUCCEEDED",
+              "taskExceptionDetails": {}
+            },
+            {
+              "endTime": 1758053180006,
+              "id": "2",
+              "implementingClass": "com.netflix.spinnaker.orca.front50.tasks.MonitorFront50Task",
+              "loopEnd": false,
+              "loopStart": false,
+              "name": "waitForPipelineSave",
+              "stageEnd": true,
+              "stageStart": false,
+              "startTime": 1758053179898,
+              "status": "SUCCEEDED",
+              "taskExceptionDetails": {}
+            }
+          ],
+          "type": "savePipeline"
+        }
+      ],
+      "startTime": 1758053179521,
+      "status": "SUCCEEDED",
+      "systemNotifications": [],
+      "trigger": {
+        "artifacts": [],
+        "dryRun": false,
+        "notifications": [],
+        "other": {
+          "artifacts": [],
+          "dryRun": false,
+          "expectedArtifacts": [],
+          "notifications": [],
+          "parameters": {},
+          "rebake": false,
+          "resolvedExpectedArtifacts": [],
+          "strategy": false,
+          "type": "manual",
+          "user": "anonymous"
+        },
+        "parameters": {},
+        "rebake": false,
+        "resolvedExpectedArtifacts": [],
+        "strategy": false,
+        "type": "manual",
+        "user": "anonymous"
+      },
+      "type": "ORCHESTRATION"
+    },
+    "executionId": "01K5A2582HS9M5N3XQ4AEGEXDR"
+  },
+  "details": {
+    "application": "fluent",
+    "created": "1758053180120",
+    "requestHeaders": {},
+    "source": "orca",
+    "type": "orca:orchestration:complete"
+  },
+  "eventId": "1d21fa79-cf5b-4a15-b460-b131332311b3"
+}

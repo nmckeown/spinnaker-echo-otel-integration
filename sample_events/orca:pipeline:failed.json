@@ -1,0 +1,98 @@
+{
+  "content": {
+    "execution": {
+      "application": "fluent",
+      "authentication": {
+        "allowedAccounts": [
+          "dockerhub",
+          "default"
+        ],
+        "user": "anonymous"
+      },
+      "buildTime": 1757966172107,
+      "canceled": false,
+      "endTime": 1757966172332,
+      "id": "01K57F5ZXGYJNS8772A8XKADKC",
+      "initialConfig": {},
+      "keepWaitingPipelines": false,
+      "limitConcurrent": true,
+      "maxConcurrentExecutions": 0,
+      "name": "noop-fail",
+      "notifications": [],
+      "origin": "api",
+      "pipelineConfigId": "64a59f39-4191-439a-b9d6-a07c4803e77f",
+      "stages": [
+        {
+          "context": {
+            "beforeStagePlanningFailed": true,
+            "completeOtherBranchesThenFail": false,
+            "continuePipeline": false,
+            "exception": {
+              "details": {
+                "error": "Unexpected Task Failure",
+                "errors": [
+                  "No StageDefinitionBuilder implementation for fail(alias: null) found (knownTypes: googleCloudBuild, upsertDeliveryConfig, lambdaInvoke, shrinkCluster, reorderPipelines, upsertLoadBalancers, lambdaUpdateCode, resumeRolloutManifest, modifyAsgLaunchConfiguration, remote, upsertEntityTags, deleteSnapshot, deletePipeline, bulkUpsertEntityTags, deregisterInstancesFromLoadBalancer, quickPatch, deleteLaunchConfiguration, destroyAsg, runJob, deployCloudFormation, checkPreconditions, determineTargetReference, clouddriverClearAltTablespace, upsertSecurityGroup, manualJudgment, upsertLoadBalancer, Aws.LambdaTrafficRoutingStage, getProperties, disableCluster, modifyGceAutoscalingPolicy, deployService, script, restoreSnapshot, gremlin, disableManifest, terminateInstanceAndDecrementServerGroup, copyAmazonLoadBalancer, rollbackCluster, disableInstancesInDiscovery, cloneServerGroup, updatePipeline, deleteLaunchTemplate, bakeCloudFoundryManifest, setStatefulDisk, wait, monitorPipeline, serverGroupForceCacheRefresh, statefullyUpdateBootImage, deleteTencentCloudScheduledAction, upsertDisruptionBudget, saveSnapshot, upsertAmazonDNS, findImage, scaleManifest, awsCodeBuild, undoRolloutManifest, noop, lambdaDeployment, upsertAsgScheduledActions, enableInstancesInDiscovery, deleteEntityTags, concourse, destroyService, findArtifactsFromResource, registerInstancesWithLoadBalancer, jenkins, rebootInstances, lambdaDelete, rollbackServerGroup, upsertServerGroupTags, captureSourceServerGroupCapacity, upsertPluginInfo, destroyJob, cloudOperation, bulkQuickPatch, deployManifest, scaleDownCluster, findImageFromTags, lambdaTrafficRouting, pipeline, upsertScalingPolicy, upsertProject, detachInstances, updateApplication, preconfiguredWebhook, createApplication, deleteDeliveryConfig, unmapLoadBalancers, terminateInstanceAndDecrementAsg, modifyAwsScalingProcess, rollingPush, shareService, enableServerGroup, disableServerGroup, savePipelinesFromArtifact, webhook, deleteLoadBalancer, createServiceKey, resizeServerGroup, waitUntil, Aws.LambdaInvokeStage, patchManifest, deploy, deleteManifest, lambdaFunction, upsertAmazonLoadBalancer, evaluateVariables, determineTargetServerGroup, updateJobProcesses, deleteImage, enableManifest, Aws.LambdaDeploymentStage, setPreferredPluginRelease, jira, deleteSecurityGroup, upsertAsgTags, enableAsg, wercker, upsertCloudrunLoadBalancers, Aws.LambdaUpdateCodeStage, waitForCondition, deleteProject, updateLaunchTemplate, preconfiguredJob, copySecurityGroup, mapLoadBalancers, restrictExecutionDuringTimeWindow, loadPluginRelease, terminateInstances, cloudFoundryDeleteServiceBindings, savePipeline, pauseRolloutManifest, startAppEngineServerGroup, dependsOnExecution, upsertTencentCloudScheduledActions, updateSecurityGroupsForServerGroup, modifyScalingProcess, upsertApplication, applySourceServerGroupCapacity, updateLaunchConfig, findArtifactFromExecution, bakeManifest, upsertAppEngineLoadBalancers, stopAppEngineServerGroup, copyLastAsg, pinServerGroup, upsertImageTags, deleteApplication, modifyScalingGroup, Aws.LambdaDeleteStage, cloudFoundryCreateServiceBindings, rollingRestartManifest, bulkDestroyServerGroup, disableAsg, modifyAsg, unshareService, pageApplicationOwner, createServerGroup, deleteAmazonLoadBalancer, deleteScalingPolicy, bake, travis, destroyServerGroup, deployCloudrunManifest, deleteServiceKey, deployAppEngineConfiguration)"
+                ],
+                "stackTrace": "com.netflix.spinnaker.orca.StageResolver$NoSuchStageDefinitionBuilderException: No StageDefinitionBuilder implementation for fail(alias: null) found..."
+              },
+              "exceptionType": "NoSuchStageDefinitionBuilderException",
+              "operation": "Intentional Fail:ConstructAfterStages",
+              "shouldRetry": false,
+              "timestamp": 1757966172276
+            },
+            "message": "Deliberate failure for testing"
+          },
+          "endTime": 1757966172276,
+          "id": "01K57F5ZYAQR3VGZ0192S7EK4K",
+          "name": "Intentional Fail",
+          "outputs": {},
+          "refId": "1",
+          "requisiteStageRefIds": [],
+          "status": "TERMINAL",
+          "tasks": [],
+          "type": "fail"
+        }
+      ],
+      "startTime": 1757966172164,
+      "status": "TERMINAL",
+      "systemNotifications": [],
+      "trigger": {
+        "artifacts": [],
+        "dryRun": false,
+        "notifications": [],
+        "other": {
+          "artifacts": [],
+          "dryRun": false,
+          "enabled": false,
+          "eventId": "4a5ae057-ec27-4e5b-b9d6-fdd1781cd558",
+          "executionId": "01K57F5ZXGYJNS8772A8XKADKC",
+          "expectedArtifacts": [],
+          "notifications": [],
+          "parameters": {},
+          "preferred": false,
+          "rebake": false,
+          "resolvedExpectedArtifacts": [],
+          "strategy": false,
+          "type": "manual",
+          "user": "[anonymous]"
+        },
+        "parameters": {},
+        "rebake": false,
+        "resolvedExpectedArtifacts": [],
+        "strategy": false,
+        "type": "manual",
+        "user": "[anonymous]"
+      },
+      "type": "PIPELINE"
+    },
+    "executionId": "01K57F5ZXGYJNS8772A8XKADKC"
+  },
+  "details": {
+    "application": "fluent",
+    "created": "1757966172348",
+    "requestHeaders": {},
+    "source": "orca",
+    "type": "orca:pipeline:failed"
+  },
+  "eventId": "8c38b075-4a2a-4855-9ee8-e4ca899b9657"
+}

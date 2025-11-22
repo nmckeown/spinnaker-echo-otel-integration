@@ -1,0 +1,96 @@
+{
+  "content": {
+    "execution": {
+      "application": "fluent",
+      "authentication": {
+        "allowedAccounts": [],
+        "user": "devops"
+      },
+      "buildTime": 1760896457821,
+      "canceled": true,
+      "canceledBy": "devops",
+      "cancellationReason": "Broke",
+      "endTime": 1760896468143,
+      "id": "01K7YSQ71RBRRT6CQ23QAKWGB4",
+      "initialConfig": {},
+      "keepWaitingPipelines": false,
+      "limitConcurrent": true,
+      "maxConcurrentExecutions": 0,
+      "name": "noop-wait2",
+      "notifications": [],
+      "origin": "api",
+      "pipelineConfigId": "a5234392-512c-4188-a7b5-21a7b60e1f71",
+      "stages": [
+        {
+          "context": {
+            "waitTime": 10
+          },
+          "endTime": 1760896468089,
+          "id": "01K7YSQ72WBFB8D8T8X2RMFJFT",
+          "name": "Wait 1s",
+          "outputs": {},
+          "refId": "1",
+          "requisiteStageRefIds": [],
+          "startTime": 1760896457921,
+          "status": "SUCCEEDED",
+          "tasks": [
+            {
+              "endTime": 1760896468032,
+              "id": "1",
+              "implementingClass": "com.netflix.spinnaker.orca.pipeline.tasks.WaitTask",
+              "loopEnd": false,
+              "loopStart": false,
+              "name": "wait",
+              "stageEnd": true,
+              "stageStart": true,
+              "startTime": 1760896457975,
+              "status": "SUCCEEDED",
+              "taskExceptionDetails": {}
+            }
+          ],
+          "type": "wait"
+        }
+      ],
+      "startTime": 1760896457866,
+      "status": "CANCELED",
+      "systemNotifications": [],
+      "trigger": {
+        "artifacts": [],
+        "dryRun": false,
+        "notifications": [],
+        "other": {
+          "artifacts": [],
+          "dryRun": false,
+          "enabled": false,
+          "eventId": "1d6c328a-9c15-488a-8530-c5195dc86056",
+          "executionId": "01K7YSQ71RBRRT6CQ23QAKWGB4",
+          "expectedArtifacts": [],
+          "notifications": [],
+          "parameters": {},
+          "preferred": false,
+          "rebake": false,
+          "resolvedExpectedArtifacts": [],
+          "strategy": false,
+          "type": "manual",
+          "user": "devops"
+        },
+        "parameters": {},
+        "rebake": false,
+        "resolvedExpectedArtifacts": [],
+        "strategy": false,
+        "type": "manual",
+        "user": "devops"
+      },
+      "type": "PIPELINE"
+    },
+    "executionId": "01K7YSQ71RBRRT6CQ23QAKWGB4"
+  },
+  "details": {
+    "application": "fluent",
+    "created": "1760896472971",
+    "requestHeaders": {},
+    "source": "orca",
+    "type": "orca:pipeline:failed"
+  },
+  "eventId": "177556f7-4300-42b4-b009-4ffa053557a5"
+}

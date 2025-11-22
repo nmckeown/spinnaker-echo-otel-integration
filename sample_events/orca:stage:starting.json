@@ -1,0 +1,108 @@
+[
+  [
+    1756564399.792670052,
+    {}
+  ],
+  {
+    "details": {
+      "source": "orca",
+      "type": "orca:stage:starting",
+      "created": "1756564399781",
+      "application": "fluent",
+      "requestHeaders": {}
+    },
+    "content": {
+      "standalone": false,
+      "canceled": false,
+      "context": {
+        "waitTime": 10
+      },
+      "startTime": 1756564399772,
+      "executionId": "01K3XPB9F5JGY9MVGFE6Q3XDQK",
+      "stageId": "01K3XPB9JEB16CP16J51XVD0VX",
+      "isSynthetic": false,
+      "name": "Wait 1s",
+      "execution": {
+        "type": "PIPELINE",
+        "id": "01K3XPB9F5JGY9MVGFE6Q3XDQK",
+        "application": "fluent",
+        "name": "noop-wait",
+        "buildTime": 1756564399694,
+        "canceled": false,
+        "limitConcurrent": true,
+        "maxConcurrentExecutions": 0,
+        "keepWaitingPipelines": false,
+        "stages": [
+          {
+            "id": "01K3XPB9JEB16CP16J51XVD0VX",
+            "refId": "1",
+            "type": "wait",
+            "name": "Wait 1s",
+            "startTime": 1756564399772,
+            "status": "RUNNING",
+            "context": {
+              "waitTime": 10
+            },
+            "outputs": {},
+            "tasks": [
+              {
+                "id": "1",
+                "implementingClass": "com.netflix.spinnaker.orca.pipeline.tasks.WaitTask",
+                "name": "wait",
+                "status": "NOT_STARTED",
+                "stageStart": true,
+                "stageEnd": true,
+                "loopStart": false,
+                "loopEnd": false,
+                "taskExceptionDetails": {}
+              }
+            ],
+            "requisiteStageRefIds": []
+          }
+        ],
+        "startTime": 1756564399719,
+        "status": "RUNNING",
+        "authentication": {
+          "user": "anonymous",
+          "allowedAccounts": [
+            "dockerhub",
+            "default"
+          ]
+        },
+        "origin": "api",
+        "trigger": {
+          "type": "manual",
+          "user": "[anonymous]",
+          "parameters": {},
+          "artifacts": [],
+          "notifications": [],
+          "other": {
+            "type": "manual",
+            "user": "[anonymous]",
+            "parameters": {},
+            "artifacts": [],
+            "notifications": [],
+            "rebake": false,
+            "dryRun": false,
+            "strategy": false,
+            "resolvedExpectedArtifacts": [],
+            "expectedArtifacts": [],
+            "eventId": "1f0e0dc3-bdda-4949-ad25-1063e5ef66cb",
+            "enabled": false,
+            "executionId": "01K3XPB9F5JGY9MVGFE6Q3XDQK",
+            "preferred": false
+          },
+          "resolvedExpectedArtifacts": [],
+          "rebake": false,
+          "strategy": false,
+          "dryRun": false
+        },
+        "pipelineConfigId": "23832fa5-aff6-44c7-88ea-f05c9b365e77",
+        "notifications": [],
+        "initialConfig": {},
+        "systemNotifications": []
+      }
+    },
+    "eventId": "3df4674a-b76a-40b0-bab2-b0d5b915b7ba"
+  }
+]
