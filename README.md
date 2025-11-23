@@ -2,7 +2,8 @@
 
 A comprehensive observability solution for Spinnaker that integrates Spinnaker Echo webhook events with OpenTelemetry (OTel) to provide real-time metrics, dashboards, and monitoring capabilities for continuous delivery pipelines.
 
-<img width="2033" height="1072" alt="Screenshot from 2025-11-23 15-23-53" src="https://github.com/user-attachments/assets/02a2a495-1a38-47db-8377-5d2e9e1cbd28" />
+<img width="2016" height="1057" alt="Screenshot from 2025-11-23 15-39-55" src="https://github.com/user-attachments/assets/0f565084-10be-4546-b033-313dfbf99499" />
+
 
 
 ## Table of Contents
