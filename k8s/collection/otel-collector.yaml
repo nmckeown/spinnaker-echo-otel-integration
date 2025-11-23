@@ -38,6 +38,13 @@ data:
           - context: datapoint
             statements:
               - delete_key(attributes, "") where attributes[""] != nil
+      filter/execution_name_meta:
+        logs:
+          include:
+            match_type: regexp
+            record_attributes:
+              - key: execution.name
+                value: '^[^-]+-[^-]+-[^-]+-[^-]+-[^-]+$'
       transform/logs:
         log_statements:
           - context: log
@@ -70,14 +77,14 @@ data:
 
               # extract service attributes from pipeline naming convention
               - set(attributes["execution.name"], String(attributes["execution.name"])) where attributes["execution.name"] != nil
-              - set(attributes["service.meta"],   Split(attributes["execution.name"], "-")) where attributes["execution.name"] != nil
+              - set(attributes["service.meta"], Split(attributes["execution.name"], "-")) where attributes["execution.name"] != nil
 
               # extract elements (cloud/region/env/domain/instance)
-              - set(attributes["cloud.provider"],   attributes["service.meta"][0]) where IsList(attributes["service.meta"]) and Len(attributes["service.meta"]) > 0
-              - set(attributes["cloud.region"],     attributes["service.meta"][1]) where IsList(attributes["service.meta"]) and Len(attributes["service.meta"]) > 1
-              - set(attributes["cloud.env"],        attributes["service.meta"][2]) where IsList(attributes["service.meta"]) and Len(attributes["service.meta"]) > 2
-              - set(attributes["cloud.domain"],     attributes["service.meta"][3]) where IsList(attributes["service.meta"]) and Len(attributes["service.meta"]) > 3
-              - set(attributes["cloud.instance"],   attributes["service.meta"][4]) where IsList(attributes["service.meta"]) and Len(attributes["service.meta"]) > 4
+              - set(attributes["cloud.provider"], attributes["service.meta"][0]) where IsList(attributes["service.meta"]) and Len(attributes["service.meta"]) > 0
+              - set(attributes["cloud.region"], attributes["service.meta"][1]) where IsList(attributes["service.meta"]) and Len(attributes["service.meta"]) > 1
+              - set(attributes["cloud.env"], attributes["service.meta"][2]) where IsList(attributes["service.meta"]) and Len(attributes["service.meta"]) > 2
+              - set(attributes["cloud.domain"], attributes["service.meta"][3]) where IsList(attributes["service.meta"]) and Len(attributes["service.meta"]) > 3
+              - set(attributes["cloud.instance"], attributes["service.meta"][4]) where IsList(attributes["service.meta"]) and Len(attributes["service.meta"]) > 4
 
               # delete blank keys
               - delete_key(attributes, "") where attributes[""] != nil
