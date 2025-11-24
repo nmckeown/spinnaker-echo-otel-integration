@@ -390,13 +390,13 @@ The OTel Collector extracts metadata from pipeline names using a specific format
 <cloud-provider>-<region>-<environment>-<domain>-<instance>
 ```
 
-Example: `aws-us-east-1-prod-api-gateway`
+Example: `aws-useast1-prod-servicemesh-gateway1`
 
 This convention enables filtering and grouping by:
 - Cloud provider (AWS, GCP, Azure)
 - Region
 - Environment (dev, staging, prod)
-- Domain (api, web, data)
+- Domain (security, iam, monitoring)
 - Instance/service name
 
 ### Event Types Processed
