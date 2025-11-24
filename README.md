@@ -36,7 +36,7 @@ A comprehensive observability solution for Spinnaker that integrates Spinnaker E
 
 ## Overview
 
-This project provides a production-ready implementation for collecting, processing, and visualizing Spinnaker pipeline execution events using modern observability tools. It transforms Spinnaker's event-driven architecture into actionable metrics for monitoring pipeline performance, failure rates, and DORA metrics.
+This project provides a production-ready implementation for collecting, processing, and visualising Spinnaker pipeline execution events using modern observability tools. It transforms Spinnaker's event-driven architecture into actionable metrics for monitoring pipeline performance, failure rates, and DORA metrics.
 
 ## Quick Start
 
@@ -70,7 +70,7 @@ kubectl port-forward -n monitoring svc/grafana 3000:3000
 - **Prometheus Integration**: Industry-standard metrics collection and alerting
 - **Stage-Level Tracking**: Monitor individual pipeline stages for granular insights
 - **Multi-Cloud Support**: Extract cloud provider, region, and environment from pipeline naming conventions
-- **Complete Stack Included**: Spinnaker deployment, collection, processing, storage, and visualization
+- **Complete Stack Included**: Spinnaker deployment, collection, processing, storage, and visualisation
 
 ### Why This Solution?
 
@@ -98,7 +98,7 @@ Spinnaker Echo → Fluent Bit → OpenTelemetry Collector → Prometheus → Gra
    - Calculates durations and failure rates
    - Generates MTTR metrics
 4. **Prometheus**: Scrapes and stores metrics for querying
-5. **Grafana**: Visualizes metrics through customizable dashboards
+5. **Grafana**: Visualises metrics through customisable dashboards
 
 ### Architecture Diagrams
 
@@ -155,7 +155,7 @@ The `arch_drawings/` directory contains visual representations of:
   - Collector self-monitoring (port 8888)
 
 ### Grafana
-- **Purpose**: Visualization and dashboards
+- **Purpose**: Visualisation and dashboards
 - **Configuration**: `k8s/monitoring/grafana.yaml`
 - **Dashboard**: `dashboard/grafana-spinnaker-dashboard.yaml`
 - **Features**:
@@ -163,7 +163,7 @@ The `arch_drawings/` directory contains visual representations of:
   - Pipeline performance metrics
   - Failure rate trends
   - Stage-level analysis
-  - DORA metrics visualization
+  - DORA metrics visualisation
 
 ### Alertmanager
 - **Purpose**: Alert routing and management
@@ -440,26 +440,26 @@ spinnaker_last_success_ts_seconds - spinnaker_last_failure_ts_seconds
 
 ```
 .
-├── arch_drawings/              # Architecture diagrams
+├── arch_drawings/                # Architecture diagrams
 │   ├── cd_otel_observability_problem.png
 │   ├── cd_otel_observability_solution.png
 │   ├── cd_otel_spinnaker_integration.png
 │   └── cd_otel_spinnaker_lab.png
-├── dashboard/                  # Grafana dashboards
+├── dashboard/                    # Grafana dashboards
 │   └── grafana-spinnaker-dashboard.yaml
-├── events/                     # Sample event data (for testing)
-├── k8s/                       # Kubernetes manifests
-│   ├── collection/            # Data collection components
+├── events/                       # Sample event data (for testing)
+├── k8s/                          # Kubernetes manifests
+│   ├── collection/               # Data collection components
 │   │   ├── fluentbit-echo-webhook.yaml
 │   │   └── otel-collector.yaml
-│   ├── monitoring/            # Monitoring stack
+│   ├── monitoring/               # Monitoring stack
 │   │   ├── alertmanager.yaml
 │   │   ├── grafana.yaml
 │   │   └── prometheus.yaml
-│   └── spinnaker/             # Spinnaker deployment
+│   └── spinnaker/                # Spinnaker deployment
 │       └── charts/
 │           └── spinnaker-opsmx/  # OpsMx Spinnaker Helm chart
-└── screen_captures/           # Screenshots and documentation
+└── screen_captures/              # Screenshots and documentation
 ```
 
 ## Troubleshooting
@@ -537,14 +537,14 @@ curl http://localhost:9464/metrics | grep spinnaker
 Potential areas for expansion:
 
 - **Distributed Tracing**: Add span correlation for end-to-end pipeline tracing
-- **Log Aggregation**: Integrate with Loki for centralized log storage
+- **Log Aggregation**: Integrate with Loki for centralised log storage
 - **Advanced Alerting**: Pre-configured Prometheus alert rules for common failure scenarios
 - **Multi-Cluster Support**: Aggregate metrics from multiple Spinnaker instances
 - **Custom Dashboards**: Additional dashboard templates for specific use cases
 
 ## Contributing
 
-This is a research project for the TU Dublin DevOps MSc program. Contributions, feedback, and suggestions are welcome:
+Contributions, feedback, and suggestions are welcome:
 
 - **Issues**: Report bugs or suggest features via GitHub issues
 - **Pull Requests**: Improvements to configurations, documentation, or dashboards
