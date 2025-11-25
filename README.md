@@ -85,6 +85,7 @@ Traditional Spinnaker deployments lack comprehensive observability for pipeline 
 ## Architecture
 
 The solution consists of four main components:
+<img width="3208" height="2402" alt="cd_otel_spinnaker_integration" src="https://github.com/user-attachments/assets/2012814a-67a0-44ec-91b0-7618091c6efb" />
 
 ```
 Spinnaker Echo → Fluent Bit → OpenTelemetry Collector → Prometheus → Grafana
